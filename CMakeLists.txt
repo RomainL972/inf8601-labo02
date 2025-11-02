@@ -172,15 +172,14 @@ target_link_libraries(source-checker
     LLVMFrontendOpenMP
 )
 
-add_custom_target(check-source
-  COMMAND ${CMAKE_CURRENT_BINARY_DIR}/source-checker
-  -d ${CMAKE_CURRENT_SOURCE_DIR}
-  -v ${VARIANT}
-  2> /dev/null
-)
-add_dependencies(check-source source-checker)
-
 endif()
+
+enable_testing()
+add_test(NAME check-source
+	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/source-checker
+    -d ${CMAKE_CURRENT_SOURCE_DIR}
+    -v ${VARIANT}
+)
 
 add_custom_target(format
     COMMAND clang-format -i --verbose `find source -type f -iname '*.cl'`
