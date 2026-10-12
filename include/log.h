@@ -4,20 +4,25 @@
 #define INCLUDE_LOG_H_
 
 #include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
-#define LOG_ERROR(msg, args...) fprintf(stderr, "%s:%d: " msg "\n", __FILE__, __LINE__, ##args)
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((format(printf, 3, 4)))
+#endif
+static inline void log_error(const char* file, int line, const char* format, ...) {
+    va_list args;
+
+    fprintf(stderr, "%s:%d: ", file, line);
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    fputc('\n', stderr);
+}
+
+#define LOG_ERROR(...) log_error(__FILE__, __LINE__, __VA_ARGS__)
 #define LOG_ERROR_ERRNO(msg) LOG_ERROR("%s (%s)", msg, strerror(errno))
 #define LOG_ERROR_NULL_PTR(...) LOG_ERROR("NULL pointer received")
-#define LOG_ERROR_OPENGL(msg)                                 \
-    ({                                                        \
-        GLenum error;                                         \
-        while ((error = glGetError()) != GL_NO_ERROR) {       \
-            LOG_ERROR("%s (%s)", msg, gluErrorString(error)); \
-        }                                                     \
-        int ret = (error == GL_NO_ERROR) ? 0 : -1;            \
-        ret;                                                  \
-    })
 
 #endif /* INCLUDE_LOG_H_ */

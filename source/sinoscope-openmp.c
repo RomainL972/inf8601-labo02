@@ -8,5 +8,5 @@
 #include "sinoscope.h"
 
 int sinoscope_image_openmp(sinoscope_t* sinoscope) {
-	return -1;
+    return -1;
 }

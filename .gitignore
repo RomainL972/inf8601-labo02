@@ -1,5 +1,8 @@
-README.pdf
 build/
-source/sinoscope-openmp.c
-source/sinoscope-opencl.c
-source/kernel/sinoscope.cl
+build-*/
+.cache/
+charge/dist/
+__pycache__/
+*.png
+*.tar.gz
+compile_commands.json

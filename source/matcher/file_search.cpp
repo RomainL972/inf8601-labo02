@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <sstream>
 
 std::string loadFile(const std::string& file_path) {
     std::ifstream f{file_path};
@@ -23,35 +24,9 @@ std::string loadFile(const std::string& file_path) {
     return ss.str();
 }
 
-Requirements getVariantRequirements(unsigned int variant) {
-    switch (variant) {
-    case 1:
-        return {{OmpConstruct::ParallelWithFor, OmpSchedule::Static},
-                {OclParam::IntStructFloatStruct, OclDim::OneD}};
-    case 2:
-        return {{OmpConstruct::ParallelWithFor, OmpSchedule::Dynamic},
-                {OclParam::IntStructFloatStruct, OclDim::TwoD}};
-    case 3:
-        return {{OmpConstruct::ParallelWithForSIMD, OmpSchedule::Static},
-                {OclParam::Struct, OclDim::OneD}};
-    case 4:
-        return {{OmpConstruct::ParallelWithForSIMD, OmpSchedule::Dynamic},
-                {OclParam::Struct, OclDim::TwoD}};
-    case 5:
-        return {{OmpConstruct::ParallelFor, OmpSchedule::Static},
-                {OclParam::IntStructFloatOneByOne, OclDim::OneD}};
-    case 6:
-        return {{OmpConstruct::ParallelFor, OmpSchedule::Dynamic},
-                {OclParam::IntStructFloatOneByOne, OclDim::TwoD}};
-    case 7:
-        return {{OmpConstruct::ParallelForSIMD, OmpSchedule::Static},
-                {OclParam::FloatStructIntOneByOne, OclDim::OneD}};
-    case 8:
-        return {{OmpConstruct::ParallelForSIMD, OmpSchedule::Dynamic},
-                {OclParam::FloatStructIntOneByOne, OclDim::TwoD}};
-    default:
-        throw std::runtime_error("Unexpected variant number");
-    }
+Requirements getRequirements() {
+    return {{OmpConstruct::ParallelFor, OmpSchedule::Static},
+            {OclParam::IntStructFloatOneByOne, OclDim::OneD}};
 }
 
 inline void assert(bool cond, const std::string& mess) {
@@ -113,6 +88,9 @@ void assertOmpVariant(const OmpImpl& requirements,
     case OmpConstruct::ParallelFor:
         assert(!has_simd && has_parallel_for && has_parallel,
                "omp parallel for attendu");
+        assert(!has_collapse,
+               "seule la boucle extérieure doit être parallélisée (pas de "
+               "collapse)");
         break;
     case OmpConstruct::ParallelForSIMD:
         assert(has_simd && has_parallel_for && has_parallel,

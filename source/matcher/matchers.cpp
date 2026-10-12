@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <array>
 
+#include "clang/AST/Attr.h"
+
 #include "matchers.hpp"
 
 using namespace clang;
@@ -74,10 +76,12 @@ void KernelCallback::run(
             result.Nodes.getNodeAs<FunctionDecl>("kernelDecl")) {
         // match->dump();
 
+        // The kernel attribute class was renamed across LLVM versions, so
+        // rely on its spelling (`__kernel` or `kernel`) instead.
         bool is_kernel = false;
-        for (auto attr : match->attrs()) {
-
-            if (attr->getParsedKind() == clang::Attr::AT_OpenCLKernel) {
+        for (const auto* attr : match->attrs()) {
+            std::string spelling = attr->getSpelling();
+            if (spelling == "__kernel" || spelling == "kernel") {
                 is_kernel = true;
                 has_matched = true;
             }

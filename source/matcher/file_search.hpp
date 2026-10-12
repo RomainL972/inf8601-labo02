@@ -34,10 +34,10 @@ using OclImpl = std::tuple<OclParam, OclDim>;
 
 using Requirements = std::pair<OmpImpl, OclImpl>;
 
-/** \fn assertVariant
- * \brief Verifies that a variant is respected, or throws
+/** \fn getRequirements
+ * \brief Constructs and parameters required by the lab specification
  */
-Requirements getVariantRequirements(unsigned int variant);
+Requirements getRequirements();
 
 void assertOmpVariant(const OmpImpl& requirements,
                       const std::string& file_path);

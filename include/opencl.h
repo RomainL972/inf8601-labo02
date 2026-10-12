@@ -7,6 +7,8 @@
 
 extern char* opencl_kernel_path;
 
+/* Options to pass to clBuildProgram so that the kernel can `#include "helpers.cl"`. */
+const char* opencl_build_options(void);
 int opencl_load_kernel_code(char** code, size_t* len);
 int opencl_get_device_id(unsigned int platform_index, unsigned int device_index, cl_device_id* context_device_id);
 int opencl_print_device_info(cl_device_id device_id);

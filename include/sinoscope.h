@@ -47,7 +47,7 @@ int sinoscope_corners(sinoscope_t* sinoscope);
 int sinoscope_check(unsigned int width, unsigned int height, unsigned int taylor, float max,
                     sinoscope_opencl_t* opencl);
 int sinoscope_benchmarks(unsigned int width, unsigned int height, unsigned int taylor, float max,
-                        sinoscope_opencl_t* opencl, unsigned int iterations);
+                         sinoscope_opencl_t* opencl, unsigned int iterations);
 
 int sinoscope_benchmark(sinoscope_t* sinoscope, unsigned int iterations);
 
