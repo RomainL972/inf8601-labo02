@@ -62,8 +62,9 @@ endif()
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
+    # Pinned to a raw commit, not a tag: no GIT_SHALLOW, a depth-1 clone only has the current
+    # master, which stops containing this commit as soon as stb publishes a new one.
     GIT_TAG 2c980bb59875b0d32144a71867fbdebb2f77cd20
-    GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(stb)
 if (NOT TARGET stb::stb)
